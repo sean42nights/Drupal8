@@ -59,3 +59,10 @@ Click Save VHost
 
 Then final step restart apache:
 # /etc/init.d/httpd restart
+
+
+
+To automatically add a www to your domain name when there isn't a subdomain, add this to the .htaccess file in your document root:
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
+  RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [L,R=301]
