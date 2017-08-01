@@ -38,7 +38,7 @@ a2enmod ssl
 
 ## Go Server Admin – Module Admin – Override a Virtual Host Setting – Select a domain and click Select Vhost:
   On port override field, fill: 443
-  Check ‘Forward Port 80 to Overriden Port’ if you want to always use HTTPS
+  Check ‘Forward Port 80 to Overriden Port’ if you want to always use HTTPS, uncheck it to avoid landing page redirects
   Fill IP Override with your Server IP Address.
 ## If you use a self-signed certificate, fill custom entry with:
   SSLEngine On
@@ -60,9 +60,8 @@ a2enmod ssl
 # Then final step restart apache:
 /etc/init.d/httpd restart
 
-
-
-## To automatically add a www to your domain name when there isn't a subdomain, add this to the .htaccess file in your document root:
-  RewriteEngine On
-  RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
-  RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [L,R=301]
+## Edit both /etc/zpanel/configs/apache/httpd-vhosts.conf and .htaccess
+  RewriteEngine on
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} !^www\. [NC]
+  RewriteRule (.*) https://www.example.com%{REQUEST_URI} [R=301,L]
